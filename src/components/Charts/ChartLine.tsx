@@ -27,7 +27,7 @@ const ChartLine: React.FC = () => {
     Object.keys(timeSeries).forEach((time) => {
       const openPrice = parseFloat(timeSeries[time]["1. open"]);
       chartData.push({ x: index, y: openPrice });
-      timeStamps.push(time);
+      timeStamps.push(time); // Lưu timestamp đầy đủ (ngày + giờ)
       index++;
     });
 
@@ -50,7 +50,11 @@ const ChartLine: React.FC = () => {
         },
         scales: {
           x: {
-            type: "linear",
+            type: "category", // Dùng "category" để hiển thị ngày
+            labels: Object.keys(timeSeries).map((time) => {
+              const date = new Date(time); // Chuyển timestamp thành đối tượng Date
+              return date.getDate().toString(); // Chỉ lấy ngày
+            }),
             grid: {
               display: false,
             },
@@ -66,12 +70,9 @@ const ChartLine: React.FC = () => {
             callbacks: {
               title: (tooltipItems) => {
                 const index = tooltipItems[0].dataIndex;
-                return timeStamps[index]; // Display the timestamp corresponding to the data point
-              },
-              label: (tooltipItem) => {
-                const item = tooltipItem as Chart.TooltipItem; // Cast to Chart.TooltipItem
-                const openPrice = item.raw.y;
-                return `Open Price: ${openPrice}`; // Display the open price
+                const timestamp = timeStamps[index]; // Lấy timestamp đầy đủ
+                const date = new Date(timestamp); // Chuyển thành Date để hiển thị đầy đủ ngày giờ
+                return date.toLocaleString(); // Hiển thị đầy đủ ngày giờ
               },
             },
           },

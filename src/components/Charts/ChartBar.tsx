@@ -1,21 +1,23 @@
 import React from "react";
-import { Chart, defaults } from "chart.js/auto";
+import { defaults } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
+import data from "../../data/lineData.json";
 
-import sourceData from "../../data/sourceData.json";
+const openValues = Object.values(data["Time Series (5min)"]).map(
+  (item) => item["1. open"]
+);
+
+const labels = Object.keys(data["Time Series (5min)"]).map((timestamp) => {
+  const date = new Date(timestamp);
+  return date.getDate(); // Chỉ lấy phần ngày (ví dụ: "19")
+});
 
 defaults.maintainAspectRatio = false;
 defaults.responsive = true;
 
 defaults.plugins.title.display = true;
 defaults.plugins.title.align = "start";
-defaults.plugins.title.font.size = 20;
 defaults.plugins.title.color = "black";
-
-type SourceData = {
-  label: string;
-  value: number;
-};
 
 export const ChartBar: React.FC = () => {
   return (
@@ -38,11 +40,11 @@ export const ChartBar: React.FC = () => {
       <div className="w-full h-[300px] mt-[-20px]">
         <Bar
           data={{
-            labels: (sourceData as SourceData[]).map((data) => data.label),
+            labels: labels, // Sử dụng ngày (chỉ ngày) làm nhãn
             datasets: [
               {
-                label: "Count",
-                data: (sourceData as SourceData[]).map((data) => data.value),
+                label: "Open Price",
+                data: openValues, // Sử dụng openValues làm dữ liệu cho biểu đồ
                 backgroundColor: ["rgba(43, 63, 229, 0.8)"],
                 borderRadius: 5,
               },

@@ -13,4 +13,10 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
+  output: {
+    globals: {
+      "chart.js": "Chart",
+      "chart.js/helpers": "Chart.helpers",
+    },
+  },
 };
